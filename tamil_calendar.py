@@ -214,7 +214,7 @@ def get_sunrise_sunset(date, lat=DEFAULT_LAT, lon=DEFAULT_LON, alt=DEFAULT_ALT):
         # Sunrise
         res_rise, tret_rise = swe.rise_trans(
             jd_start, swe.SUN,
-            swe.CALC_RISE | swe.BIT_DISC_CENTER,
+            swe.CALC_RISE,
             geopos, 1013.25, 15.0
         )
         if res_rise == -2:
@@ -223,7 +223,7 @@ def get_sunrise_sunset(date, lat=DEFAULT_LAT, lon=DEFAULT_LON, alt=DEFAULT_ALT):
         # Sunset — search from sunrise JD onwards
         res_set, tret_set = swe.rise_trans(
             tret_rise[0], swe.SUN,
-            swe.CALC_SET | swe.BIT_DISC_CENTER,
+            swe.CALC_SET,
             geopos, 1013.25, 15.0
         )
         if res_set == -2:
