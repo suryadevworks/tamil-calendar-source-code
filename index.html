@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamil Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;500;600;700&family=Noto+Serif+Tamil:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --primary:      #2563eb;
+    --primary-dark: #1e40af;
+    --accent:       #f59e0b;
+    --text-dark:    #1f2937;
+    --text-mid:     #6b7280;
+    --text-light:   #9ca3af;
+    --bg-white:     #ffffff;
+    --bg-gray:      #f9fafb;
+    --bg-gray-dark: #f3f4f6;
+    --border:       #e5e7eb;
+    --border-dark:  #d1d5db;
+    --sunday:       #dc2626;
+    --today-bg:     #dbeafe;
+    --today-border: #3b82f6;
+    --transit-bg:   #fef3c7;
+    --transit-border: #f59e0b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-gray);
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  /* === HEADER === */
+  header {
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 16px;
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .header-title {
+    font-family: 'Noto Serif Tamil', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+ 
+
+  /* === CONTROLS === */
+  .controls {
+    max-width: 1200px;
+    margin: 20px auto 0;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .nav-btn {
+    background: var(--bg-white);
+    color: var(--text-dark);
+    border: 1px solid var(--border);
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover {
+    background: var(--bg-gray-dark);
+    border-color: var(--border-dark);
+  }
+
+  .current-month {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
+    min-width: 200px;
+    text-align: center;
+  }
+
+  /* === CALENDAR === */
+  .calendar-container {
+    max-width: 1200px;
+    margin: 20px auto 40px;
+    padding: 0 16px;
+  }
+
+  .calendar-grid {
+    background: var(--bg-white);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .weekday-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: var(--bg-gray-dark);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .weekday-cell {
+    text-align: center;
+    padding: 12px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-mid);
+    border-right: 1px solid var(--border);
+  }
+
+  .weekday-cell:last-child { border-right: none; }
+  .weekday-cell.sunday { color: var(--sunday); }
+
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .day-cell {
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 8px;
+    min-height: 100px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.15s;
+    background: var(--bg-white);
+  }
+
+  .day-cell:nth-child(7n) { border-right: none; }
+  .day-cell:hover { background: var(--bg-gray); }
+  .day-cell.empty { background: var(--bg-gray); cursor: default; }
+
+  .day-cell.today {
+    background: var(--today-bg) !important;
+    border: 2px solid var(--today-border) !important;
+  }
+
+  .day-cell.transit-day {
+    background: var(--transit-bg);
+  }
+
+  .day-cell.sunday-col .greg-day {
+    color: var(--sunday);
+  }
+
+  .greg-day {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+
+  .tamil-day {
+    font-family: 'Noto Serif Tamil', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+
+  .tamil-weekday {
+    font-size: 10px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+
+  .month-tag {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+
+  .sun-times {
+    position: absolute;
+    bottom: 6px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--text-light);
+  }
+
+  /* === LEGEND === */
+  .legend {
+    max-width: 1200px;
+    margin: 0 auto 20px;
+    padding: 12px 16px;
+    background: var(--bg-white);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--text-mid);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .legend-box {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+  }
+
+  .box-today {
+    background: var(--today-bg);
+    border: 2px solid var(--today-border);
+  }
+
+  .box-transit {
+    background: var(--transit-bg);
+    border: 2px solid var(--transit-border);
+  }
+
+  .box-month {
+    background: var(--primary);
+  }
+
+  /* === MONTH INFO === */
+  .month-info {
+    max-width: 1200px;
+    margin: 0 auto 16px;
+    padding: 0 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-mid);
+  }
+
+  /* === LOADING === */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-size: 13px;
+    color: var(--text-mid);
+  }
+
+  .hidden { display: none !important; }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .header-title { font-size: 24px; }
+    .today-inner { flex-direction: column; align-items: flex-start; }
+    .day-cell { min-height: 90px; padding: 6px; }
+    .weekday-cell { font-size: 10px; padding: 8px 4px; }
+  }
+
+  @media (max-width: 540px) {
+    .day-cell {
+      min-height: 80px !important;
+      padding: 4px !important;
+    }
+    .greg-day { font-size: 12px; }
+    .tamil-day { font-size: 16px; }
+    .tamil-weekday { font-size: 9px; }
+    .sun-times { font-size: 8px; bottom: 4px; }
+    .month-tag { font-size: 8px; padding: 1px 4px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading...</div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-title">Tamil Calendar</div>
+  </div>
+</header>
+
+
+
+<!-- CONTROLS -->
+<div class="controls">
+  <button class="nav-btn" onclick="changeMonth(-1)">←</button>
+  <div class="current-month" id="currentMonth">—</div>
+  <button class="nav-btn" onclick="changeMonth(1)">→</button>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-box box-today"></div>
+    <span>Today</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-box box-transit"></div>
+    <span id="transitLegend">Sun Transit Day</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-box box-month"></div>
+    <span>Tamil Month Start</span>
+  </div>
+</div>
+
+<!-- MONTH INFO -->
+<div class="month-info" id="monthInfo"></div>
+
+<!-- CALENDAR -->
+<div class="calendar-container">
+  <div class="calendar-grid">
+    <div class="weekday-header">
+      <div class="weekday-cell sunday">ஞாயிறு<br><small style="font-size:9px;opacity:0.7;">Sun</small></div>
+      <div class="weekday-cell">திங்கள்<br><small style="font-size:9px;opacity:0.7;">Mon</small></div>
+      <div class="weekday-cell">செவ்வாய்<br><small style="font-size:9px;opacity:0.7;">Tue</small></div>
+      <div class="weekday-cell">புதன்<br><small style="font-size:9px;opacity:0.7;">Wed</small></div>
+      <div class="weekday-cell">வியாழன்<br><small style="font-size:9px;opacity:0.7;">Thu</small></div>
+      <div class="weekday-cell">வெள்ளி<br><small style="font-size:9px;opacity:0.7;">Fri</small></div>
+      <div class="weekday-cell sunday">சனி<br><small style="font-size:9px;opacity:0.7;">Sat</small></div>
+    </div>
+    <div class="days-grid" id="daysGrid"></div>
+  </div>
+</div>
+
+<script>
+  let currentYear = new Date().getFullYear();
+  let currentMonth = new Date().getMonth() + 1;
+  let calendarData = null;
+
+  const MONTH_NAMES = ["January","February","March","April","May","June",
+                       "July","August","September","October","November","December"];
+
+  const TAMIL_NUMS = ['0','௧','௨','௩','௪','௫','௬','௭','௮','௯','௧௦',
+                      '௧௧','௧௨','௧௩','௧௪','௧௫','௧௬','௧௭','௧௮','௧௯','௨௦',
+                      '௨௧','௨௨','௨௩','௨௪','௨௫','௨௬','௨௭','௨௮','௨௯','௩௦',
+                      '௩௧','௩௨'];
+
+  function toTamil(n) { return TAMIL_NUMS[n] || String(n); }
+
+  async function loadToday() {
+    try {
+      const res = await fetch('/api/today');
+      const data = await res.json();
+      if (data.error) return;
+
+      document.getElementById('todayDate').innerHTML = 
+        `${data.tamil_day} <span style="font-size:14px;opacity:0.7;">(${toTamil(data.tamil_day)})</span> ${data.tamil_month_tamil}`;
+      document.getElementById('todayDetails').textContent = 
+        `${data.weekday_tamil} • ${data.gregorian_month} ${data.gregorian_day}, ${data.gregorian_year} • ${data.tamil_year_name}`;
+      document.getElementById('todaySunrise').textContent = data.sunrise;
+      document.getElementById('todaySunset').textContent = data.sunset;
+    } catch(e) { console.error(e); }
+  }
+
+  async function loadCalendar() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+    try {
+      const res = await fetch(`/api/calendar?year=${currentYear}&month=${currentMonth}`);
+      calendarData = await res.json();
+      document.getElementById('currentMonth').textContent = 
+        MONTH_NAMES[currentMonth-1] + ' ' + currentYear;
+      updateMonthInfo();
+      renderGrid();
+    } catch(e) {
+      console.error(e);
+    } finally {
+      document.getElementById('loadingOverlay').style.display = 'none';
+    }
+  }
+
+  function updateMonthInfo() {
+    if (!calendarData?.days) return;
+    const months = new Set();
+    const years = new Set();
+    const transits = [];
+
+    calendarData.days.forEach(d => {
+      months.add(d.tamil_month_tamil);
+      years.add(d.tamil_year_name);
+      if (d.is_month_start && d.transit_info) {
+        transits.push({
+          month: d.tamil_month_tamil,
+          time: d.transit_info.transit_time,
+          date: d.transit_info.transit_date
+        });
+      }
+    });
+
+    const monthStr = Array.from(months).join(' / ');
+    const yearStr = Array.from(years).join(' / ');
+    document.getElementById('monthInfo').textContent = `${monthStr} • ${yearStr}`;
+
+    if (transits.length > 0) {
+      const parts = transits.map(t => `${t.month}: ${t.time}`).join(' | ');
+      document.getElementById('transitLegend').innerHTML = `☀ Transit: ${parts}`;
+    }
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('daysGrid');
+    grid.innerHTML = '';
+    if (!calendarData?.days) return;
+
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+    const firstDay = calendarData.days[0];
+    const firstDate = new Date(firstDay.gregorian_date + 'T00:00:00');
+    let startDow = firstDate.getDay();
+
+    for (let i = 0; i < startDow; i++) {
+      const empty = document.createElement('div');
+      empty.className = 'day-cell empty';
+      grid.appendChild(empty);
+    }
+
+    calendarData.days.forEach(day => {
+      const cell = document.createElement('div');
+      const dateObj = new Date(day.gregorian_date + 'T00:00:00');
+      const dow = dateObj.getDay();
+
+      let classes = 'day-cell';
+      if (day.gregorian_date === todayStr) classes += ' today';
+      if (day.is_month_start) classes += ' transit-day';
+      if (dow === 0 || dow === 6) classes += ' sunday-col';
+      cell.className = classes;
+
+      let monthTag = day.is_month_start 
+        ? `<div class="month-tag">${day.tamil_month_tamil}</div>` : '';
+
+      cell.innerHTML = `
+        <div class="greg-day">${day.gregorian_day}</div>
+        <div class="tamil-day">${day.tamil_day} <span style="font-size:12px;opacity:0.7;">(${toTamil(day.tamil_day)})</span></div>
+        <div class="tamil-weekday">${day.weekday_tamil}</div>
+        ${monthTag}
+        <div class="sun-times">
+          <span>${day.sunrise}</span>
+          <span>${day.sunset}</span>
+        </div>
+      `;
+
+      grid.appendChild(cell);
+    });
+
+    const totalCells = startDow + calendarData.days.length;
+    const remainder = totalCells % 7;
+    if (remainder !== 0) {
+      for (let i = 0; i < 7 - remainder; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day-cell empty';
+        grid.appendChild(empty);
+      }
+    }
+  }
+
+  function changeMonth(delta) {
+    currentMonth += delta;
+    if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+    if (currentMonth < 1) { currentMonth = 12; currentYear--; }
+    loadCalendar();
+  }
+
+  (async () => {
+    await Promise.all([loadToday(), loadCalendar()]);
+  })();
+</script>
+</body>
+</html>
