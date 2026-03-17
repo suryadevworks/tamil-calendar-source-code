@@ -1,5 +1,7 @@
 # Tamil Calendar | தமிழ் காலண்டர்
 
+[![Live Demo](https://img.shields.io/badge/demo-online-brightgreen)](https://tamil-calendar-source-code.vercel.app/)
+
 An open-source Tamil Calendar calculation engine that determines Tamil months, dates, and year cycles using astronomical solar transit calculations.
 
 சூரியன் ராசி மாற்றம், லஹிரி அயனாம்சம் மற்றும் பாரம்பரிய 13 கடிகை விதியை பயன்படுத்தி தமிழ் மாதங்கள், தேதிகள் மற்றும் வருட சுழற்சிகளை கணக்கிடும் திறந்த மூல நிரல்.
