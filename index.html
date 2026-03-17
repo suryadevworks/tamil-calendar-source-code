@@ -384,7 +384,8 @@
 
   async function loadToday() {
     try {
-      const res = await fetch('/api/today');
+      const API_URL = 'https://tamil-calendar-source-code-5wen.vercel.app;
+      const res = await fetch(`${API_URL}/api/today`);
       const data = await res.json();
       if (data.error) return;
 
