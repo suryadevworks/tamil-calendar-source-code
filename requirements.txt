@@ -1,1 +1,2 @@
-pip install pyswisseph flask
+pyswisseph==2.10.3.2
+Flask==3.0.0
