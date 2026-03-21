@@ -6,7 +6,7 @@
 <meta name="google-site-verification" content="2lj6brGzGQV0BC_OSuxhE_Cs9OrNo92H2fMTaniMD_Q" />
 <title>Tamil Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;500;600;700&family=Noto+Serif+Tamil:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;500;600;700&family=Noto+Serif+Tamil:wght@300;400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 
 <style>
   :root {
@@ -26,6 +26,17 @@
     --today-border: #3b82f6;
     --transit-bg:   #fef3c7;
     --transit-border: #f59e0b;
+    --github-bg:    #24292f;
+    --github-hover: #32383f;
+    --ink:          #1a0f00;
+    --ink-mid:      #5a4a30;
+    --ink-light:    #8a7a60;
+    --parchment:    #fdf6e8;
+    --parchment2:   #f5edd5;
+    --gold:         #c8860a;
+    --gold-light:   #e8a830;
+    --code-bg:      #1a1208;
+    --code-border:  #3a2808;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,7 +68,32 @@
     color: var(--text-dark);
   }
 
- 
+  /* === GITHUB BUTTON === */
+  .github-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 8px 16px;
+    background: var(--github-bg);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: -apple-system, sans-serif;
+    transition: all 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .github-btn:hover {
+    background: var(--github-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  .github-btn svg { flex-shrink: 0; width: 18px; height: 18px; fill: #fff; }
+  .github-btn-label { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.2; }
+  .github-btn-top { font-size: 10px; font-weight: 400; opacity: 0.75; letter-spacing: 0.05em; text-transform: uppercase; }
+  .github-btn-main { font-size: 13px; font-weight: 600; }
 
   /* === CONTROLS === */
   .controls {
@@ -233,19 +269,9 @@
     border-radius: 3px;
   }
 
-  .box-today {
-    background: var(--today-bg);
-    border: 2px solid var(--today-border);
-  }
-
-  .box-transit {
-    background: var(--transit-bg);
-    border: 2px solid var(--transit-border);
-  }
-
-  .box-month {
-    background: var(--primary);
-  }
+  .box-today { background: var(--today-bg); border: 2px solid var(--today-border); }
+  .box-transit { background: var(--transit-bg); border: 2px solid var(--transit-border); }
+  .box-month { background: var(--primary); }
 
   /* === MONTH INFO === */
   .month-info {
@@ -281,31 +307,148 @@
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .loading-text {
-    font-size: 13px;
-    color: var(--text-mid);
-  }
-
+  .loading-text { font-size: 13px; color: var(--text-mid); }
   .hidden { display: none !important; }
+
+  /* === DOC TOGGLE === */
+  .doc-toggle-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px 32px;
+    text-align: center;
+  }
+  .doc-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #1a0f00, #2d1a00);
+    color: #e8d5a0;
+    border: 1px solid #c8860a;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Crimson Pro', 'Noto Serif Tamil', serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    transition: all .25s;
+    box-shadow: 0 2px 8px rgba(200,134,10,.2);
+  }
+  .doc-toggle-btn:hover {
+    background: linear-gradient(135deg, #2d1a00, #3d2a00);
+    box-shadow: 0 4px 16px rgba(200,134,10,.35);
+    transform: translateY(-1px);
+  }
+  .doc-toggle-btn .arr { font-size: 13px; transition: transform .3s; }
+  .doc-toggle-btn.open .arr { transform: rotate(180deg); }
+  .doc-toggle-btn .ta-label { font-family: 'Noto Serif Tamil', serif; font-size: 12px; opacity: .7; }
+
+  /* === DOC SECTION === */
+  .doc-wrapper {
+    display: none;
+    background: var(--parchment);
+    border-top: 3px solid var(--gold);
+    border-bottom: 3px solid var(--gold);
+  }
+  .doc-wrapper.visible { display: block; }
+
+  .cover {
+    background: linear-gradient(160deg, #1a0800 0%, #2d1500 40%, #1a0800 100%);
+    padding: 72px 24px 56px;
+    text-align: center;
+    position: relative;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(200,134,10,.15) 0%, transparent 70%);
+  }
+  .cover-kolam { font-size: 16px; color: var(--gold); letter-spacing: 12px; margin-bottom: 28px; opacity: .7; }
+  .cover-sun { font-size: 64px; line-height: 1; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(232,168,48,.6)); }
+  .cover-title-tamil { font-family: 'Noto Serif Tamil', serif; font-size: 26px; font-weight: 700; color: #f0d890; margin-bottom: 6px; }
+  .cover-title-en { font-family: 'Crimson Pro', serif; font-size: 20px; font-weight: 600; color: var(--gold-light); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 18px; }
+  .cover-divider { width: 80px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0 auto 18px; }
+  .cover-subtitle { max-width: 600px; margin: 0 auto 28px; font-size: 14px; color: rgba(240,216,144,.75); line-height: 1.8; }
+  .cover-badge { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 12px; }
+  .badge { background: rgba(200,134,10,.2); border: 1px solid rgba(200,134,10,.5); color: var(--gold-light); font-size: 11px; padding: 4px 12px; border-radius: 20px; font-family: 'Courier New', monospace; letter-spacing: .05em; }
+
+  .page { max-width: 900px; margin: 0 auto; padding: 40px 24px 60px; }
+  .section { margin-bottom: 48px; }
+  .section-num { font-family: 'Crimson Pro', serif; font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .section-title { font-family: 'Crimson Pro', serif; font-size: 26px; font-weight: 600; color: var(--ink); margin-bottom: 4px; line-height: 1.2; }
+  .section-title-tamil { font-family: 'Noto Serif Tamil', serif; font-size: 17px; font-weight: 600; color: var(--gold); margin-bottom: 12px; }
+  .section-rule { height: 2px; background: linear-gradient(90deg, var(--gold), transparent); margin-bottom: 24px; max-width: 320px; }
+
+  .bilingual { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .lang-en { font-family: 'Crimson Pro', serif; font-size: 16px; color: var(--ink); line-height: 1.8; }
+  .lang-ta { font-family: 'Noto Serif Tamil', serif; font-size: 13px; color: var(--ink-mid); line-height: 2.0; border-left: 2px solid var(--gold); padding-left: 16px; }
+
+  .highlight-box { background: var(--parchment2); border: 1px solid #d4b870; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; }
+
+  .formula-card { background: linear-gradient(135deg, #1a0f00, #251500); border: 1px solid var(--gold); border-radius: 10px; padding: 24px; margin-bottom: 24px; }
+  .formula-label { font-size: 10px; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; font-family: 'Courier New', monospace; }
+  .formula-main { font-family: 'Crimson Pro', serif; font-size: 19px; font-weight: 600; color: #f0d890; margin-bottom: 12px; line-height: 1.4; }
+  .formula-sub { font-size: 13px; color: rgba(232,213,176,.7); line-height: 1.7; }
+  .formula-sub .ta { font-family: 'Noto Serif Tamil', serif; font-size: 12px; display: block; margin-top: 8px; color: rgba(200,134,10,.8); }
+
+  .code-wrap { border-radius: 10px; overflow: hidden; border: 1px solid var(--code-border); margin-bottom: 24px; }
+  .code-header { background: #120c00; padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--code-border); }
+  .code-dots { display: flex; gap: 6px; }
+  .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .cd1 { background: #ef4444; } .cd2 { background: #f59e0b; } .cd3 { background: #22c55e; }
+  .code-filename { font-family: 'Courier New', monospace; font-size: 11px; color: rgba(200,134,10,.7); letter-spacing: .05em; }
+  .code-body { background: var(--code-bg); padding: 20px 24px; overflow-x: auto; }
+  .code-body pre { font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.9; color: #e8d5b0; white-space: pre-wrap; word-break: break-word; }
+  .c-keyword { color: #c08040; font-weight: 600; } .c-func { color: #7ec8a0; } .c-comment { color: #6b8a5a; font-style: italic; } .c-num { color: #a0c8f0; }
+
+  .callout { display: flex; gap: 16px; background: var(--parchment2); border: 1px solid #d4b870; border-left: 4px solid var(--gold); border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+  .callout-icon { font-size: 24px; flex-shrink: 0; line-height: 1; }
+  .callout-title { font-family: 'Crimson Pro', serif; font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+  .callout-text { font-family: 'Crimson Pro', serif; font-size: 14px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 6px; }
+  .callout-text-ta { font-family: 'Noto Serif Tamil', serif; font-size: 12px; color: var(--ink-light); line-height: 1.9; }
+  .callout code { background: rgba(200,134,10,.12); border: 1px solid rgba(200,134,10,.3); border-radius: 3px; padding: 1px 5px; font-size: 12px; font-family: 'Courier New', monospace; color: var(--gold); }
+
+  .steps { display: flex; flex-direction: column; gap: 24px; margin-bottom: 32px; }
+  .step { display: flex; gap: 20px; }
+  .step-num { width: 40px; height: 40px; background: linear-gradient(135deg, var(--gold), #a06008); color: #1a0800; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Crimson Pro', serif; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+  .step-content { flex: 1; }
+  .step-title { font-family: 'Crimson Pro', serif; font-size: 18px; font-weight: 600; color: var(--ink); }
+  .step-title-ta { font-family: 'Noto Serif Tamil', serif; font-size: 13px; color: var(--gold); margin-bottom: 8px; }
+  .step-body { font-family: 'Crimson Pro', serif; font-size: 14px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 6px; }
+  .step-body-ta { font-family: 'Noto Serif Tamil', serif; font-size: 12px; color: var(--ink-light); line-height: 1.9; margin-bottom: 10px; }
+  .cmd-block { background: var(--code-bg); border: 1px solid var(--code-border); border-radius: 8px; padding: 14px 18px; font-family: 'Courier New', monospace; font-size: 12px; color: #e8d5b0; line-height: 1.8; white-space: pre-wrap; word-break: break-word; margin-top: 10px; }
+  .cmd-prompt { color: var(--gold-light); } .cmd-comment { color: #6b8a5a; font-style: italic; }
+
+  .file-tree { background: var(--code-bg); border: 1px solid var(--code-border); border-radius: 10px; padding: 20px 24px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 2.2; color: #e8d5b0; margin-bottom: 24px; }
+  .ft-folder { color: var(--gold-light); font-weight: 600; } .ft-file { color: #7ec8a0; } .ft-desc { color: #6b8a5a; margin-left: 8px; font-size: 11px; font-style: italic; }
+
+  .divider { text-align: center; color: var(--gold); font-size: 18px; letter-spacing: 8px; margin: 32px 0; opacity: .6; }
+
+  .doc-footer { background: linear-gradient(160deg, #1a0800, #2d1500); padding: 32px 24px; text-align: center; color: rgba(240,216,144,.6); font-size: 13px; line-height: 2; }
+  .doc-footer .kolam { font-size: 20px; letter-spacing: 8px; color: var(--gold); display: block; margin-bottom: 8px; }
 
   /* === RESPONSIVE === */
   @media (max-width: 768px) {
     .header-title { font-size: 24px; }
-    .today-inner { flex-direction: column; align-items: flex-start; }
     .day-cell { min-height: 90px; padding: 6px; }
     .weekday-cell { font-size: 10px; padding: 8px 4px; }
+    .github-btn-label { display: none; }
+    .github-btn { padding: 8px 12px; }
+    .bilingual { grid-template-columns: 1fr; }
+    .lang-ta { border-left: none; border-top: 2px solid var(--gold); padding-left: 0; padding-top: 12px; }
+    .step { flex-direction: column; gap: 10px; }
+    .callout { flex-direction: column; }
   }
 
   @media (max-width: 540px) {
-    .day-cell {
-      min-height: 80px !important;
-      padding: 4px !important;
-    }
+    .day-cell { min-height: 80px !important; padding: 4px !important; }
     .greg-day { font-size: 12px; }
     .tamil-day { font-size: 16px; }
     .tamil-weekday { font-size: 9px; }
     .sun-times { font-size: 8px; bottom: 4px; }
     .month-tag { font-size: 8px; padding: 1px 4px; }
+    .doc-toggle-btn .ta-label { display: none; }
   }
 </style>
 </head>
@@ -321,10 +464,15 @@
 <header>
   <div class="header-inner">
     <div class="header-title">Tamil Calendar</div>
+    <a href="https://github.com/suryadevworks/tamil-calendar-source-code" target="_blank" rel="noopener noreferrer" class="github-btn" aria-label="View source code on GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      <span class="github-btn-label">
+        <span class="github-btn-top">GitHub</span>
+        <span class="github-btn-main">View Source Code</span>
+      </span>
+    </a>
   </div>
 </header>
-
-
 
 <!-- CONTROLS -->
 <div class="controls">
@@ -368,6 +516,326 @@
   </div>
 </div>
 
+<!-- DOC TOGGLE BUTTON -->
+<div class="doc-toggle-wrap">
+  <button class="doc-toggle-btn" id="docToggleBtn" onclick="toggleDoc()" aria-expanded="false" aria-controls="docSection">
+    ☀ &nbsp; Tamil Calendar — How It Works
+    <span class="ta-label">· தமிழ் காலண்டர் — இயக்க விளக்கம்</span>
+    <span class="arr">▼</span>
+  </button>
+</div>
+
+<!-- DOCUMENTATION -->
+<div class="doc-wrapper" id="docSection" role="region" aria-label="How Tamil Calendar Works">
+
+  <div class="cover">
+    <div class="cover-kolam">✦ &nbsp; ✦ &nbsp; ✦ &nbsp; ✦ &nbsp; ✦</div>
+    <div class="cover-sun">☀</div>
+    <div class="cover-title-tamil">தமிழ் காலண்டர் — இயக்க விளக்கம்</div>
+    <div class="cover-title-en">Tamil Calendar — How It Works</div>
+    <div class="cover-divider"></div>
+    <div class="cover-subtitle">
+      A bilingual guide explaining the astronomy, the 13-Ghatika rule, solar transit calculations, and how to run the calendar on your computer.
+      <br><br>
+      <span style="font-family:'Noto Serif Tamil',serif;font-size:13px;color:rgba(240,216,144,.7);">கணிதம், 13 கடிகை விதி, சூரிய பெயர்ச்சி கணக்கீடு மற்றும் இந்த நிரலை உங்கள் கணினியில் இயக்குவது எப்படி என்று விளக்கும் இரு மொழி வழிகாட்டி.</span>
+    </div>
+    <div class="cover-badge">
+      <span class="badge">Python 3.10+</span><span class="badge">pyswisseph</span><span class="badge">Flask</span><span class="badge">Lahiri Ayanamsa</span><span class="badge">13-Ghatika Rule</span>
+    </div>
+  </div>
+
+  <div class="page">
+
+    <!-- S1 -->
+    <div class="section">
+      <div class="section-num">Section 01</div>
+      <div class="section-title">What is a Tamil Calendar?</div>
+      <div class="section-title-tamil">தமிழ் காலண்டர் என்றால் என்ன?</div>
+      <div class="section-rule"></div>
+      <div class="bilingual">
+        <div class="lang-en">The Tamil calendar is a <strong>solar-sidereal calendar</strong> — unlike the Gregorian calendar which is purely solar, it tracks the Sun's movement through the 12 zodiac signs (Rasis) against the fixed stars (sidereal).<br><br>Each Tamil month begins when the Sun enters a new Rasi. The 12 Tamil months correspond to the 12 Rasis, starting with Chithirai (Mesha/Aries) and ending with Panguni (Meena/Pisces).</div>
+        <div class="lang-ta">தமிழ் காலண்டர் ஒரு <strong>சூரிய-நட்சத்திர காலண்டர்</strong> ஆகும். கிரிகோரியன் காலண்டர் வெறும் சூரிய கணக்கை பயன்படுத்துகிறது. தமிழ் காலண்டர் நட்சத்திரங்களை அடிப்படையாக கொண்டு சூரியனின் இயக்கத்தை கணக்கிடுகிறது.<br><br>சூரியன் ஒரு புதிய ராசிக்கு நுழையும் நேரத்தில் தமிழ் மாதம் தொடங்குகிறது — சித்திரை (மேஷம்) முதல் பங்குனி (மீனம்) வரை.</div>
+      </div>
+      <div class="highlight-box">
+        <p><strong>The 12 Tamil Months (தமிழ் மாதங்கள்):</strong></p>
+        <p style="font-family:'Noto Serif Tamil',serif;font-size:14px;color:var(--ink-mid);line-height:2.2;margin-top:8px;">சித்திரை (Chithirai/Mesha) · வைகாசி (Vaikasi/Rishabha) · ஆனி (Aani/Mithuna) · ஆடி (Aadi/Kataka) · ஆவணி (Aavani/Simha) · புரட்டாசி (Purattasi/Kanya) · ஐப்பசி (Aippasi/Tula) · கார்த்திகை (Karthigai/Vrischika) · மார்கழி (Margazhi/Dhanus) · தை (Thai/Makara) · மாசி (Maasi/Kumbha) · பங்குனி (Panguni/Meena)</p>
+      </div>
+    </div>
+
+    <div class="divider">· · ✦ · ·</div>
+
+    <!-- S2 -->
+    <div class="section">
+      <div class="section-num">Section 02</div>
+      <div class="section-title">Sidereal vs Tropical — Ayanamsa</div>
+      <div class="section-title-tamil">நட்சத்திர ராசி vs சூரிய ராசி — அயனாம்சம்</div>
+      <div class="section-rule"></div>
+      <div class="bilingual">
+        <div class="lang-en">Western astrology uses the <em>Tropical zodiac</em> (tied to seasons). Indian astrology uses the <em>Sidereal zodiac</em> (tied to actual star positions).<br><br>Due to Earth's axial precession, the two drift apart ~<strong>50.2 arcseconds/year</strong>. This difference is called the <strong>Ayanamsa</strong>.<br><br>We use <strong>Lahiri Ayanamsa</strong> — the Indian government's official standard since 1955. In 2025 ≈ <strong>24.13°</strong>.</div>
+        <div class="lang-ta">மேற்கத்திய ஜோதிடம் <em>ட்ரோபிகல் ராசிச்சக்கரம்</em> பயன்படுத்துகிறது. இந்திய ஜோதிடம் <em>நட்சத்திர ராசிச்சக்கரம்</em> பயன்படுத்துகிறது.<br><br>பூமியின் அச்சு சுழற்சியால் இவை ஆண்டுக்கு <strong>50.2 வினாடிகள்</strong> வேறுபடுகின்றன. இந்த வேறுபாட்டை <strong>அயனாம்சம்</strong> என்கிறோம்.<br><br>நாம் <strong>லஹிரி அயனாம்சம்</strong> பயன்படுத்துகிறோம் — 1955 முதல் இந்திய அரசின் தரநிலை.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-label">Formula — சூத்திரம்</div>
+        <div class="formula-main">Sidereal Longitude = Tropical Longitude − Ayanamsa</div>
+        <div class="formula-sub">Integer division by 30° gives the Rasi (0=Mesha … 11=Meena).<span class="ta">சூரியனின் ட்ரோபிகல் நிலையிலிருந்து அயனாம்சத்தை கழித்தால் நட்சத்திர நிலை கிடைக்கும். இதை 30-ஆல் வகுத்தால் ராசி கிடைக்கும்.</span></div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div><div class="code-filename">tamil_calendar.py — sun_longitude()</div></div>
+        <div class="code-body"><pre><span class="c-comment"># Set Lahiri ayanamsa</span>
+<span class="c-func">swe</span>.set_sid_mode(<span class="c-func">swe</span>.SIDM_LAHIRI)
+
+<span class="c-keyword">def</span> <span class="c-func">sun_longitude</span>(jd):
+    flags  = <span class="c-func">swe</span>.FLG_SWIEPH | <span class="c-func">swe</span>.FLG_SIDEREAL
+    result = <span class="c-func">swe</span>.calc_ut(jd, <span class="c-func">swe</span>.SUN, flags)
+    <span class="c-keyword">return</span> result[<span class="c-num">0</span>][<span class="c-num">0</span>]  <span class="c-comment"># degrees 0–360 sidereal</span>
+
+rasi_index = <span class="c-func">int</span>(<span class="c-func">sun_longitude</span>(jd) / <span class="c-num">30</span>)</pre></div>
+      </div>
+    </div>
+
+    <div class="divider">· · ✦ · ·</div>
+
+    <!-- S3 -->
+    <div class="section">
+      <div class="section-num">Section 03</div>
+      <div class="section-title">Finding Solar Transit — Binary Search</div>
+      <div class="section-title-tamil">சூரிய பெயர்ச்சி கண்டறிதல் — இரு-பிரிவு தேடல்</div>
+      <div class="section-rule"></div>
+      <div class="bilingual">
+        <div class="lang-en">We find the <em>exact moment</em> the Sun crosses from one Rasi to the next using a <strong>binary search</strong>: take a ~4-day window, repeatedly halve the interval. After <strong>50 iterations</strong>, accuracy is sub-second.</div>
+        <div class="lang-ta">சூரியன் ஒரு ராசியிலிருந்து அடுத்த ராசிக்கு செல்லும் <em>சரியான நேரத்தை</em> <strong>இரு-பிரிவு தேடல்</strong> முறையில் கண்டறிகிறோம். <strong>50 முறை</strong> பிரித்த பிறகு வினாடிக்கும் குறைவான துல்லியம் கிடைக்கிறது.</div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div><div class="code-filename">tamil_calendar.py — find_transit_jd()</div></div>
+        <div class="code-body"><pre><span class="c-keyword">def</span> <span class="c-func">find_transit_jd</span>(start_jd, end_jd, target_rasi):
+    target_lon = target_rasi * <span class="c-num">30.0</span>
+    lo, hi = start_jd, end_jd
+
+    <span class="c-keyword">for</span> _ <span class="c-keyword">in</span> <span class="c-func">range</span>(<span class="c-num">50</span>):       <span class="c-comment"># 50 iters → sub-second</span>
+        mid = (lo + hi) / <span class="c-num">2.0</span>
+        lon = <span class="c-func">sun_longitude</span>(mid)
+
+        <span class="c-keyword">if</span> target_rasi == <span class="c-num">0</span>:  <span class="c-comment"># Pisces→Aries wrap</span>
+            <span class="c-keyword">if</span> lon > <span class="c-num">330</span>: lo = mid
+            <span class="c-keyword">else</span>:         hi = mid
+        <span class="c-keyword">else</span>:
+            <span class="c-keyword">if</span> lon < target_lon: lo = mid
+            <span class="c-keyword">else</span>:                hi = mid
+
+    <span class="c-keyword">return</span> hi  <span class="c-comment"># Julian Day of transit</span></pre></div>
+      </div>
+      <div class="callout">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body">
+          <div class="callout-title">Special Case: Pisces → Aries (பங்குனி → சித்திரை)</div>
+          <div class="callout-text">The zodiac wraps from 360° back to 0°. We check <code>lon > 330</code> (still in Pisces) and <code>lon &lt; 20</code> (entered Aries) to handle this boundary correctly.</div>
+          <div class="callout-text-ta">ராசிச்சக்கரம் 360°-லிருந்து மீண்டும் 0°-க்கு திரும்புகிறது. பங்குனி முதல் சித்திரை வரை சிறப்பு கணக்கீடு தேவை.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider">· · ✦ · ·</div>
+
+    <!-- S4 -->
+    <div class="section">
+      <div class="section-num">Section 04</div>
+      <div class="section-title">The 13-Ghatika Rule</div>
+      <div class="section-title-tamil">13 கடிகை விதி</div>
+      <div class="section-rule"></div>
+      <div class="bilingual">
+        <div class="lang-en">The most important traditional rule for determining which day a Tamil month <em>starts</em>.<br><br><strong>1 Ghatika = 24 minutes.</strong><br><strong>13 Ghatikas = 312 minutes = 5 hrs 12 min</strong> after sunrise.<br><br>Transit within 312 min → that day is Month Day 1. Transit after 312 min → next day is Month Day 1.</div>
+        <div class="lang-ta">தமிழ் மாதம் எந்த நாளில் தொடங்குகிறது என்பதை தீர்மானிக்கும் மிக முக்கியமான விதி.<br><br><strong>1 கடிகை = 24 நிமிடங்கள்.</strong><br><strong>13 கடிகை = 312 நிமிடங்கள்</strong> சூரிய உதயத்திற்கு பிறகு.<br><br>312 நிமிடங்களுக்குள் பெயர்ச்சி → அந்த நாளே மாத முதல் நாள். இல்லையென்றால் அடுத்த நாள்.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-label">13-Ghatika Decision Rule — 13 கடிகை தீர்மான விதி</div>
+        <div class="formula-main">Transit ≤ Sunrise + 312 min → Day 1 = Transit Date<br>Transit &gt; Sunrise + 312 min → Day 1 = Next Day</div>
+        <div class="formula-sub">Example: Chithirai 2025 transit at 3:07 AM on April 14. Sunrise = 6:05 AM. Transit before sunrise → within 312 min → April 14 = Chithirai Day 1 ✓<span class="ta">எடுத்துக்காட்டு: சித்திரை 2025 — ஏப்ரல் 14 அதிகாலை 3:07 மணிக்கு பெயர்ச்சி. சூரிய உதயம் 6:05 மணி → ஏப்ரல் 14 = சித்திரை 1 ✓</span></div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div><div class="code-filename">tamil_calendar.py — apply_13_ghatika_rule()</div></div>
+        <div class="code-body"><pre><span class="c-keyword">def</span> <span class="c-func">apply_13_ghatika_rule</span>(transit_ist, sunrise_ist):
+    sr    = sunrise_ist.replace(tzinfo=<span class="c-keyword">None</span>)
+    tr    = transit_ist.replace(tzinfo=<span class="c-keyword">None</span>)
+    limit = sr + timedelta(minutes=<span class="c-num">312</span>)  <span class="c-comment"># 13 × 24</span>
+
+    <span class="c-keyword">if</span> tr <= limit:
+        <span class="c-keyword">return</span> tr.date()                    <span class="c-comment"># same day</span>
+    <span class="c-keyword">else</span>:
+        <span class="c-keyword">return</span> tr.date() + timedelta(days=<span class="c-num">1</span>) <span class="c-comment"># next day</span></pre></div>
+      </div>
+    </div>
+
+    <div class="divider">· · ✦ · ·</div>
+
+    <!-- S5 -->
+    <div class="section">
+      <div class="section-num">Section 05</div>
+      <div class="section-title">Sunrise Calculation</div>
+      <div class="section-title-tamil">சூரிய உதய கணக்கீடு</div>
+      <div class="section-rule"></div>
+      <div class="bilingual">
+        <div class="lang-en">Precise sunrise is critical — a 2-minute error can shift the Tamil month start by an entire day due to the 13-Ghatika rule.</div>
+        <div class="lang-ta">சரியான சூரிய உதய நேரம் மிக முக்கியம் — 2 நிமிட பிழை கூட தமிழ் மாத தொடக்க நாளை மாற்றி விடலாம்.</div>
+      </div>
+      <div class="code-wrap">
+        <div class="code-header"><div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div><div class="code-filename">tamil_calendar.py — get_sunrise_sunset()</div></div>
+        <div class="code-body"><pre><span class="c-comment"># rise_trans(tjdut, body, rsmi, geopos, atpress, attemp)</span>
+geopos = (lon, lat, alt)  <span class="c-comment"># lon first!</span>
+
+res, tret = <span class="c-func">swe</span>.rise_trans(
+    jd_start, <span class="c-func">swe</span>.SUN,
+    <span class="c-func">swe</span>.CALC_RISE,
+    geopos, <span class="c-num">1013.25</span>, <span class="c-num">15.0</span>
+)
+sunrise_jd = tret[<span class="c-num">0</span>]</pre></div>
+      </div>
+      <div class="callout">
+        <div class="callout-icon">🌅</div>
+        <div class="callout-body">
+          <div class="callout-title">Why Swiss Ephemeris over other libraries?</div>
+          <div class="callout-text">Swiss Ephemeris gives sub-second sunrise accuracy. The <code>astral</code> Python library introduces ±1–2 minute errors — unacceptable for Panchangam calculations where precision determines which day a Tamil month starts.</div>
+          <div class="callout-text-ta">Swiss Ephemeris வினாடிக்கும் குறைவான துல்லியத்தை தருகிறது. Astral Python நூலகம் ±1–2 நிமிட பிழையை உருவாக்கும் — இது பஞ்சாங்க கணக்கீட்டிற்கு ஏற்றதல்ல.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider">· · ✦ · ·</div>
+
+    <!-- S6 -->
+    <div class="section">
+      <div class="section-num">Section 06</div>
+      <div class="section-title">Tamil Year — 60-Year Cycle</div>
+      <div class="section-title-tamil">தமிழ் வருடம் — 60 வருட சுழற்சி</div>
+      <div class="section-rule"></div>
+      <div class="bilingual">
+        <div class="lang-en">Tamil years follow a 60-year cycle (Sashti Abdha Poorthi). The new year starts when the Sun enters Mesha (Chithirai), usually around April 14th.<br><br>Anchor: <strong>April 2025 = Visvavasu (விஸ்வாவசு)</strong>, index 38 (0-based).</div>
+        <div class="lang-ta">தமிழ் வருடங்கள் 60 ஆண்டு சுழற்சியை பின்பற்றுகின்றன. சூரியன் மேஷ ராசிக்கு நுழையும் போது புத்தாண்டு தொடங்குகிறது.<br><br>நங்கூரம்: <strong>ஏப்ரல் 2025 = விஸ்வாவசு</strong>, குறியீடு 38.</div>
+      </div>
+      <div class="formula-card">
+        <div class="formula-label">Year Calculation — வருட கணக்கீடு</div>
+        <div class="formula-main">index = (38 + gregorian_year − 2025) % 60</div>
+        <div class="formula-sub">2024 → 37 → குரோதி (Krodhi) ✓ &nbsp; 2025 → 38 → விஸ்வாவசு (Visvavasu) ✓ &nbsp; 2026 → 39 → பராபவ (Parabha) ✓</div>
+      </div>
+    </div>
+
+    <div class="divider">· · ✦ · ·</div>
+
+    <!-- S7 -->
+    <div class="section">
+      <div class="section-num">Section 07</div>
+      <div class="section-title">Project File Structure</div>
+      <div class="section-title-tamil">திட்ட கோப்பு அமைப்பு</div>
+      <div class="section-rule"></div>
+      <div class="file-tree">
+        <div><span class="ft-folder">📁 tamil-calendar/</span></div>
+        <div>&nbsp;&nbsp;├── <span class="ft-file">📄 tamil_calendar.py</span><span class="ft-desc">← Core astronomy (transits, sunrise, 13-ghatika)</span></div>
+        <div>&nbsp;&nbsp;├── <span class="ft-file">📄 index.py</span><span class="ft-desc">← Flask API server (Vercel deployment)</span></div>
+        <div>&nbsp;&nbsp;└── <span class="ft-file">📄 index.html</span><span class="ft-desc">← Frontend UI (GitHub Pages)</span></div>
+      </div>
+      <div class="bilingual">
+        <div class="lang-en"><strong>tamil_calendar.py</strong> — Pure astronomy. No web framework. All calculation functions: sun longitude, transit finder, sunrise/sunset, 13-ghatika rule, year cycle.<br><br><strong>index.py</strong> — Flask/Vercel API. Two endpoints: <code>/api/calendar</code> (monthly data) and <code>/api/today</code> (today's Tamil date).<br><br><strong>index.html</strong> — Single-file frontend on GitHub Pages. Fetches the API and renders the bilingual calendar.</div>
+        <div class="lang-ta"><strong>tamil_calendar.py</strong> — தூய கோளரிதல் கணக்கீடு. சூரிய நிலை, பெயர்ச்சி, சூரிய உதயம், 13 கடிகை விதி, வருட சுழற்சி.<br><br><strong>index.py</strong> — Vercel-ல் Flask API. <code>/api/calendar</code> மற்றும் <code>/api/today</code>.<br><br><strong>index.html</strong> — GitHub Pages-ல் ஒற்றை கோப்பு முன்னகட்டு.</div>
+      </div>
+    </div>
+
+    <div class="divider">· · ✦ · ·</div>
+
+    <!-- S8 -->
+    <div class="section">
+      <div class="section-num">Section 08</div>
+      <div class="section-title">How to Run Locally</div>
+      <div class="section-title-tamil">உள்ளூரில் எவ்வாறு இயக்குவது</div>
+      <div class="section-rule"></div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <div class="step-title">Install Python</div>
+            <div class="step-title-ta">Python நிறுவுக</div>
+            <div class="step-body">Download Python 3.10+ from <strong>python.org</strong>. On Windows check <em>"Add Python to PATH"</em>.</div>
+            <div class="step-body-ta">python.org-லிருந்து Python 3.10+ பதிவிறக்கவும். Windows-ல் <em>"Add Python to PATH"</em> தேர்ந்தெடுக்கவும்.</div>
+            <div class="cmd-block"><span class="cmd-prompt">$ </span>python3 --version</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <div class="step-title">Install Libraries</div>
+            <div class="step-title-ta">நூலகங்களை நிறுவுக</div>
+            <div class="step-body">Open terminal and install required packages:</div>
+            <div class="step-body-ta">Terminal திறந்து தேவையான தொகுப்புகளை நிறுவுக:</div>
+            <div class="cmd-block"><span class="cmd-prompt">$ </span>pip install pyswisseph flask flask-cors</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <div class="step-title">Run the Server</div>
+            <div class="step-title-ta">சேவையகத்தை தொடங்கவும்</div>
+            <div class="step-body">Navigate to the project folder and run:</div>
+            <div class="step-body-ta">திட்ட கோப்புறைக்கு சென்று இயக்கவும்:</div>
+            <div class="cmd-block"><span class="cmd-prompt">$ </span>cd path/to/tamil-calendar
+<span class="cmd-prompt">$ </span>python3 index.py
+<span style="color:#7ec8a0"> * Running on http://127.0.0.1:5050</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <div class="step-title">Open in Browser</div>
+            <div class="step-title-ta">உலாவியில் திறக்கவும்</div>
+            <div class="step-body">Open any browser and visit:</div>
+            <div class="step-body-ta">எந்த உலாவியிலும் திறந்து செல்லவும்:</div>
+            <div class="cmd-block"><span style="color:var(--gold-light)">http://localhost:5050</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="callout">
+        <div class="callout-icon">📍</div>
+        <div class="callout-body">
+          <div class="callout-title">Default Location — Why Tiruchirappalli?</div>
+          <div class="callout-text">Coordinates <strong>10°56′N, 78°25′E</strong> are the approximate geographic centre of Tamil Nadu, giving a balanced average sunrise/sunset for all districts across the state.</div>
+          <div class="callout-text-ta">இயல்பு ஆயத்தொலைவுகள் தமிழ்நாட்டின் தோராய புவியியல் மைய புள்ளி — மாநிலம் முழுவதும் சராசரி சூரிய உதய/அஸ்தமன நேரம் கொடுக்கிறது.</div>
+          <div class="cmd-block" style="margin-top:12px;"><span class="cmd-comment"># Other cities — Google Maps → right-click → copy coordinates</span>
+DEFAULT_LAT = <span style="color:#a0c8a0">13.0827</span>  DEFAULT_LON = <span style="color:#a0c8a0">80.2707</span>  <span class="cmd-comment"># Chennai</span>
+DEFAULT_LAT = <span style="color:#a0c8a0">9.9252</span>   DEFAULT_LON = <span style="color:#a0c8a0">78.1198</span>  <span class="cmd-comment"># Madurai</span>
+DEFAULT_LAT = <span style="color:#a0c8a0">11.0168</span>  DEFAULT_LON = <span style="color:#a0c8a0">76.9558</span>  <span class="cmd-comment"># Coimbatore</span>
+DEFAULT_LAT = <span style="color:#a0c8a0">8.0883</span>   DEFAULT_LON = <span style="color:#a0c8a0">77.5385</span>  <span class="cmd-comment"># Kanyakumari</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider">· · ✦ · ·</div>
+
+    <!-- S9 -->
+    <div class="section">
+      <div class="section-num">Section 09</div>
+      <div class="section-title">Quick Reference</div>
+      <div class="section-title-tamil">விரைவு குறிப்பு</div>
+      <div class="section-rule"></div>
+      <div class="highlight-box">
+        <p><strong>Key Constants (முக்கிய மாறிலிகள்)</strong></p>
+        <p style="font-family:'Noto Serif Tamil',serif;font-size:14px;color:var(--ink-mid);line-height:2.4;margin-top:8px;">
+          1 Ghatika (கடிகை) = <strong>24 minutes</strong><br>
+          13 Ghatikas = <strong>312 minutes = 5 hrs 12 min</strong><br>
+          Lahiri Ayanamsa (2025) ≈ <strong>24.13°</strong><br>
+          Sun travels ≈ <strong>1° per day</strong> (30° per month)<br>
+          Tamil month duration ≈ <strong>29–32 days</strong><br>
+          60-year cycle anchor: <strong>2025 = விஸ்வாவசு (index 38)</strong>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="doc-footer">
+    <span class="kolam">✦ ☀ ✦</span>
+    தமிழ் காலண்டர் · சூரிய பெயர்ச்சி அடிப்படையில் · 13 கடிகை விதி
+    <br><span style="font-family:'Crimson Pro',serif;letter-spacing:1px;opacity:.7">Tamil Calendar · Solar Transit Based · 13-Ghatika Rule</span>
+  </div>
+
+</div><!-- end .doc-wrapper -->
+
 <script>
   let currentYear = new Date().getFullYear();
   let currentMonth = new Date().getMonth() + 1;
@@ -383,18 +851,21 @@
 
   function toTamil(n) { return TAMIL_NUMS[n] || String(n); }
 
+  function toggleDoc() {
+    const btn = document.getElementById('docToggleBtn');
+    const doc = document.getElementById('docSection');
+    const isOpen = doc.classList.contains('visible');
+    doc.classList.toggle('visible', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    if (!isOpen) setTimeout(() => doc.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+
   async function loadToday() {
     try {
       const res = await fetch('/api/today');
       const data = await res.json();
       if (data.error) return;
-
-      document.getElementById('todayDate').innerHTML = 
-        `${data.tamil_day} <span style="font-size:14px;opacity:0.7;">(${toTamil(data.tamil_day)})</span> ${data.tamil_month_tamil}`;
-      document.getElementById('todayDetails').textContent = 
-        `${data.weekday_tamil} • ${data.gregorian_month} ${data.gregorian_day}, ${data.gregorian_year} • ${data.tamil_year_name}`;
-      document.getElementById('todaySunrise').textContent = data.sunrise;
-      document.getElementById('todaySunset').textContent = data.sunset;
     } catch(e) { console.error(e); }
   }
 
@@ -403,7 +874,7 @@
     try {
       const res = await fetch(`/api/calendar?year=${currentYear}&month=${currentMonth}`);
       calendarData = await res.json();
-      document.getElementById('currentMonth').textContent = 
+      document.getElementById('currentMonth').textContent =
         MONTH_NAMES[currentMonth-1] + ' ' + currentYear;
       updateMonthInfo();
       renderGrid();
@@ -424,17 +895,12 @@
       months.add(d.tamil_month_tamil);
       years.add(d.tamil_year_name);
       if (d.is_month_start && d.transit_info) {
-        transits.push({
-          month: d.tamil_month_tamil,
-          time: d.transit_info.transit_time,
-          date: d.transit_info.transit_date
-        });
+        transits.push({ month: d.tamil_month_tamil, time: d.transit_info.transit_time });
       }
     });
 
-    const monthStr = Array.from(months).join(' / ');
-    const yearStr = Array.from(years).join(' / ');
-    document.getElementById('monthInfo').textContent = `${monthStr} • ${yearStr}`;
+    document.getElementById('monthInfo').textContent =
+      Array.from(months).join(' / ') + ' • ' + Array.from(years).join(' / ');
 
     if (transits.length > 0) {
       const parts = transits.map(t => `${t.month}: ${t.time}`).join(' | ');
@@ -450,8 +916,7 @@
     const today = new Date();
     const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
-    const firstDay = calendarData.days[0];
-    const firstDate = new Date(firstDay.gregorian_date + 'T00:00:00');
+    const firstDate = new Date(calendarData.days[0].gregorian_date + 'T00:00:00');
     let startDow = firstDate.getDay();
 
     for (let i = 0; i < startDow; i++) {
@@ -462,8 +927,7 @@
 
     calendarData.days.forEach(day => {
       const cell = document.createElement('div');
-      const dateObj = new Date(day.gregorian_date + 'T00:00:00');
-      const dow = dateObj.getDay();
+      const dow = new Date(day.gregorian_date + 'T00:00:00').getDay();
 
       let classes = 'day-cell';
       if (day.gregorian_date === todayStr) classes += ' today';
@@ -471,14 +935,11 @@
       if (dow === 0 || dow === 6) classes += ' sunday-col';
       cell.className = classes;
 
-      let monthTag = day.is_month_start 
-        ? `<div class="month-tag">${day.tamil_month_tamil}</div>` : '';
-
       cell.innerHTML = `
         <div class="greg-day">${day.gregorian_day}</div>
         <div class="tamil-day">${day.tamil_day} <span style="font-size:12px;opacity:0.7;">(${toTamil(day.tamil_day)})</span></div>
         <div class="tamil-weekday">${day.weekday_tamil}</div>
-        ${monthTag}
+        ${day.is_month_start ? `<div class="month-tag">${day.tamil_month_tamil}</div>` : ''}
         <div class="sun-times">
           <span>${day.sunrise}</span>
           <span>${day.sunset}</span>
@@ -488,10 +949,9 @@
       grid.appendChild(cell);
     });
 
-    const totalCells = startDow + calendarData.days.length;
-    const remainder = totalCells % 7;
-    if (remainder !== 0) {
-      for (let i = 0; i < 7 - remainder; i++) {
+    const rem = (startDow + calendarData.days.length) % 7;
+    if (rem) {
+      for (let i = 0; i < 7 - rem; i++) {
         const empty = document.createElement('div');
         empty.className = 'day-cell empty';
         grid.appendChild(empty);
